@@ -92,7 +92,6 @@ if [ "$VERBOSE" = true ]; then
         --exclude=".stfolder" \
         --exclude="__Working__" \
         --exclude="Notes" \
-        --exclude="Backup" \
         "${SOURCE_DIR}/" \
         "${SNAPSHOT_NEW}" | tee "${SNAPSHOT_DIR}/rsync_${DATETIME: -8}.log"
 else
@@ -102,7 +101,6 @@ else
         --exclude=".stfolder" \
         --exclude="__Working__" \
         --exclude="Notes" \
-        --exclude="Backup" \
         "${SOURCE_DIR}/" \
         "${SNAPSHOT_NEW}" > "${SNAPSHOT_DIR}/rsync_${DATETIME: -8}.log"
 fi
@@ -111,18 +109,18 @@ mv "${SNAPSHOT_DIR}/rsync_${DATETIME: -8}.log" "${SNAPSHOT_NEW}"
 
 if diff -rq --exclude=diffs_*.log --exclude=rsync_*.log "${SNAPSHOT_PREV}" "${SNAPSHOT_NEW}" > /dev/null 2>&1; then
     if [ "$VERBOSE" = true ]; then
-        echo -e "\nNo differences between ${SNAPSHOT_PREV#${SNAPSHOT_DIR}/} and ${SNAPSHOT_NEW#${SNAPSHOT_DIR}/}" | \
+        echo
+        echo "No differences between ${SNAPSHOT_PREV} and ${SNAPSHOT_NEW}" | \
             tee "${SNAPSHOT_DIR}/diffs_${DATETIME: -8}.log"
     else
-        echo "No differences between ${SNAPSHOT_PREV#${SNAPSHOT_DIR}/} and ${SNAPSHOT_NEW#${SNAPSHOT_DIR}/}" > \
+        echo "No differences between ${SNAPSHOT_PREV} and ${SNAPSHOT_NEW}" > \
             "${SNAPSHOT_DIR}/diffs_${DATETIME: -8}.log"
     fi
 else
     if [ "$VERBOSE" = true ]; then
-        echo -e "\nDifferences between ${SNAPSHOT_PREV#${SNAPSHOT_DIR}/} and ${SNAPSHOT_NEW#${SNAPSHOT_DIR}/} saved \
-            in ${SNAPSHOT_NEW#${SNAPSHOT_DIR}/}/diffs_${DATETIME}.log"
+        echo -e "\nDifferences between ${SNAPSHOT_PREV} and ${SNAPSHOT_NEW} saved in ${SNAPSHOT_NEW}/diffs_${DATETIME}.log"
     fi
-    echo -e "Differences between ${SNAPSHOT_PREV#${SNAPSHOT_DIR}/} and ${SNAPSHOT_NEW#${SNAPSHOT_DIR}/}\n" > \
+    echo -e "Differences between ${SNAPSHOT_PREV} and ${SNAPSHOT_NEW}\n" > \
         "${SNAPSHOT_DIR}/diffs_${DATETIME: -8}.log"
     diff -rq --exclude=diffs_*.log --exclude=rsync_*.log "${SNAPSHOT_PREV}" "${SNAPSHOT_NEW}" >> \
         "${SNAPSHOT_DIR}/diffs_${DATETIME: -8}.log" || true
