@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# A script to perform incremental backups using rsync
+# Script to perform incremental backups using rsync
 
 set -o errexit
 set -o nounset
