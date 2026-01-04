@@ -83,7 +83,7 @@ fi
 
 readonly SNAPSHOT_NEW="Snapshot_${DATETIME}";
 rm -rf "$SNAPSHOT_NEW" 2> /dev/null || true
-readonly SNAPSHOT_PREV=$(find . -maxdepth 1 -type d -printf "%f\n" | grep -E '^Snapshot_26CW[0-9]{2}-[0-9]{8}$' | sort | tail -n 1)
+readonly SNAPSHOT_PREV=$(find . -maxdepth 1 -type d -printf "%f\n" | grep -E '^Snapshot_[0-9]{2}CW[0-9]{2}-[0-9]{8}$' | sort | tail -n 1)
 
 if [ "$VERBOSE" = true ]; then
     rsync -av --delete \
