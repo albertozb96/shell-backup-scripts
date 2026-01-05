@@ -37,7 +37,7 @@ for dir in Snapshot_*; do
                     if [ $(date -d "$dirDate" +%u) -ne 7 ]; then
                         rm -rf "$dir"
                         echo "$dir Deleted."
-			delete=$(expr "$delete" + 1)
+						delete=$(expr "$delete" + 1)
                     else
                         SNAPSHOT_NEW="${dir:0:15}"
 						SNAPSHOT_PREV=$(find . -maxdepth 1 -type d -printf "%f\n" \
@@ -65,8 +65,10 @@ for dir in Snapshot_*; do
         esac
     else
         echo "Max number of folders ($MAX_DELETE) deleted. Script finished."
+		echo
 	exit
     fi
 done
 
 echo "Nothing more to do. Script finished."
+echo
