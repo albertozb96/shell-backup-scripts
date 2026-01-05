@@ -6,7 +6,7 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-readonly SNAPSHOT_DIR="${HOME}/Snapshots"
+readonly SNAPSHOT_DIR="${HOME}/Snapshots-Support"
 readonly MAX_DELETE=3
 readonly YEARS_SNAPSHOTS=1
 readonly DATE_DAYS_AGO=$(date -d "14 days ago" '+%Y%m%d')
