@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to perform incremental backups using rsync
+# Script to delete innecesaries backups
 
 set -o errexit
 set -o nounset
@@ -18,7 +18,6 @@ cd "$SNAPSHOT_DIR" || exit
 echo "$(basename $0): $(date '+%Y-%m-%d')"
 
 for dir in Snapshot_*; do
-    #echo
     if [ "$delete" -lt "$MAX_DELETE" ] && [ -d "$dir" ]; then
         case "$dir" in
             Snapshot_??CW??)
@@ -38,20 +37,20 @@ for dir in Snapshot_*; do
                     if [ $(date -d "$dirDate" +%u) -ne 7 ]; then
                         rm -rf "$dir"
                         echo "$dir Deleted."
-			delete=$(expr "$delete" + 1)
+						delete=$(expr "$delete" + 1)
                     else
                         SNAPSHOT_NEW="${dir:0:15}"
-			SNAPSHOT_PREV=$(find . -maxdepth 1 -type d -printf "%f\n" \
+						SNAPSHOT_PREV=$(find . -maxdepth 1 -type d -printf "%f\n" \
                             | grep -E '^Snapshot_[0-9]{2}CW[0-9]{2}$' | sort | tail -n 1 ) || true
                         mv "$dir" "${dir:0:15}"
                         rm "${SNAPSHOT_NEW}/diffs_${dir: -8}.log" || true
 
                         if [ "$SNAPSHOT_PREV" != "" ]; then
                             if diff -rq --exclude=diffs_*.log --exclude=rsync_*.log "${SNAPSHOT_PREV}" "${SNAPSHOT_NEW}" > /dev/null 2>&1; then
-                                echo "No differences between ${SNAPSHOT_PREV#${SNAPSHOT_DIR}/} and ${SNAPSHOT_NEW#${SNAPSHOT_DIR}/}" > \
+                                echo "No differences between ${SNAPSHOT_PREV} and ${SNAPSHOT_NEW}" > \
                                     "${SNAPSHOT_DIR}/diffs_${SNAPSHOT_NEW: -8}.log"
                             else
-                                echo -e "Differences between ${SNAPSHOT_PREV#${SNAPSHOT_DIR}/} and ${SNAPSHOT_NEW#${SNAPSHOT_DIR}/}\n" > \
+                                echo -e "Differences between ${SNAPSHOT_PREV} and ${SNAPSHOT_NEW}\n" > \
                                     "${SNAPSHOT_DIR}/diffs_${SNAPSHOT_NEW: -6}.log"
                                 diff -rq --exclude=diffs_*.log --exclude=rsync_*.log "${SNAPSHOT_PREV}" "${SNAPSHOT_NEW}" >> \
                                     "${SNAPSHOT_DIR}/diffs_${SNAPSHOT_NEW: -6}.log" || true
@@ -66,7 +65,7 @@ for dir in Snapshot_*; do
         esac
     else
         echo "Max number of folders ($MAX_DELETE) deleted. Script finished."
-	echo
+		echo
         exit
     fi
 done
